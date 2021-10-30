@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "OpenLibraryApp",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

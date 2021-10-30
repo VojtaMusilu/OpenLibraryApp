@@ -1,0 +1,7 @@
+{
+  "name": "OpenLibraryApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
