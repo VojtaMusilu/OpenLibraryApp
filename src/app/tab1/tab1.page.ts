@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SearchBooksService } from '../api/search-books.service';
 
 @Component({
   selector: 'app-tab1',
@@ -6,7 +7,20 @@ import { Component } from '@angular/core';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  inputBook: String
+  bookOutput: String = ''
+  constructor(private searchBooksService: SearchBooksService) {
+  }
 
-  constructor() {}
+  public btnSearchClicked(): void {
+    this.searchBooksService.getBooks(this.inputBook).subscribe((data)=> {
+      console.log(data);
+      this.bookOutput = data['numFound'];
+    })
+  }
+
+  
 
 }
+
+
