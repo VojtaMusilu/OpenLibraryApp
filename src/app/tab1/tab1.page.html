@@ -30,14 +30,14 @@
         <ion-input clearInput placeholder="Book name" [(ngModel)]="inputBook" minlength="3"></ion-input>
       </ion-item>
 
-      <ion-button expand="block" (click)="btnSearchClicked()">Search</ion-button>
+      <ion-button expand="block" (click)="btnSearchClicked()" [disabled]=" inputBook.length < 3 ">Search</ion-button>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
     <ion-card-header>
       <ion-card-title>Results</ion-card-title>
-      <ion-card-subtitle>{{inputBook}} -> {{bookOutput}}</ion-card-subtitle>
+      <ion-card-subtitle>Number of results: {{bookOutput}}</ion-card-subtitle>
 
     </ion-card-header>
   </ion-card>
