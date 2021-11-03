@@ -1,11 +1,13 @@
 export class HistoryRecord 
 {
-    inputHistory: String
+    inputBook: String
+    inputAuthor: String
     outputHistory: String
 
-    constructor(inputHistory: String, outputHistory: String) 
+    constructor(inputBook: String, inputAuthor: String, outputHistory: String) 
     {
-        this.inputHistory = inputHistory;
+        this.inputBook = inputBook;
+        this.inputAuthor = inputAuthor;
         this.outputHistory = outputHistory;
     }
 }

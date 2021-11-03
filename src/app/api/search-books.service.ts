@@ -6,7 +6,15 @@ import { HttpClient } from '@angular/common/http';
 export class SearchBooksService {
 
   constructor(private http: HttpClient) { }
-  public getBooks(text: String) {
-    return this.http.get('http://openlibrary.org/search.json?title=' + text);
+  public getBooks(book: String, author: String) {
+    if (book.length >= 3 && author.length < 3) {
+      return this.http.get('http://openlibrary.org/search.json?title=' + book);
+    }
+    else if (book.length < 3 && author.length >= 3) {
+      return this.http.get('http://openlibrary.org/search.json?title=' + book);
+    }
+    else {
+      return this.http.get('http://openlibrary.org/search.json?author=' + author + '&title=' + book);
+    }
   }
 }

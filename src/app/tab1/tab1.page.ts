@@ -9,24 +9,30 @@ import { HistoryService } from '../api/history.service';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  inputAuthor: String = ''
   inputBook: String = ''
   bookOutput: String = ''
+  booksArray: Array<any> = []
   loadingDialog: any
+  isShow = false
   constructor(
-    private searchBooksService: SearchBooksService, 
-    public loadingController: LoadingController, 
+    private searchBooksService: SearchBooksService,
+    public loadingController: LoadingController,
     private historyService: HistoryService
-    ) {
+  ) {
   }
 
   public btnSearchClicked(): void {
     this.presentLoading();
-    this.searchBooksService.getBooks(this.inputBook).subscribe((data) => {
+    this.searchBooksService.getBooks(this.inputBook, this.inputAuthor).subscribe((data) => {
       console.log(data);
       this.bookOutput = data['numFound'];
-      let record = new HistoryRecord(this.inputBook, this.bookOutput);
+      this.booksArray = data['docs'];
+      let record = new HistoryRecord(this.inputBook, this.inputAuthor, this.bookOutput);
       this.historyService.saveRecord(record);
       this.loadingDialog.dismiss();
+      console.log(this.booksArray);
+      this.isShow = true;
     })
   }
 
