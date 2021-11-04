@@ -13,5 +13,14 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <h2>
+    {{firstName}}
+  </h2>
+  <ion-list>
+    <ion-item>
+      <ion-label>First name</ion-label>
+      <ion-input (ionInput)="onInput($event)"></ion-input>
+    </ion-item>
+  </ion-list>
+
 </ion-content>
