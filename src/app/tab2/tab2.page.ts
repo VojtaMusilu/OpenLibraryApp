@@ -19,4 +19,9 @@ export class Tab2Page {
 
   }
 
+  public searchHistory(): void {
+
+    
+  }
+
 }

@@ -22,18 +22,15 @@
     <ion-card-content>
       <ion-item>
         <ion-icon name="person" slot="start"></ion-icon>
-        <ion-input clearInput placeholder="Author" [(ngModel)]="inputAuthor" minlength="3"></ion-input>
+        <ion-input clearInput placeholder="Author" [(ngModel)]="inputAuthor" minlength="3" (keyup.enter)="btnSearchClicked()"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-icon name="book" slot="start"></ion-icon>
-        <ion-input clearInput placeholder="Book name" [(ngModel)]="inputBook" minlength="3"></ion-input>
+        <ion-input clearInput placeholder="Book name" [(ngModel)]="inputBook" minlength="3" (keyup.enter)="btnSearchClicked()"></ion-input>
       </ion-item>
 
-      <!--(click)="btnSearchClicked()" -->
-      <!-- (click)="onInput($event)" -->
       <ion-button expand="block" 
-      
       (click)="btnSearchClicked()"
         [disabled]=" inputBook.length < 3 && inputAuthor.length < 3">Search</ion-button>
     </ion-card-content>

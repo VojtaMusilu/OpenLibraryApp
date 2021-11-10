@@ -24,16 +24,18 @@ export class Tab1Page {
   }
 
   public btnSearchClicked(): void {
-    this.presentLoading();
-    this.searchBooksService.getBooks(this.inputBook, this.inputAuthor).subscribe((data) => {
-      console.log(data);
-      this.bookOutput = data['numFound'];
-      this.booksArray = data['docs'];
-      this.loadingDialog.dismiss();
-      console.log(this.booksArray);
-      this.isShow = true;
-      this.onInput();
-    })
+    if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
+      this.presentLoading();
+      this.searchBooksService.getBooks(this.inputBook, this.inputAuthor).subscribe((data) => {
+        console.log(data);
+        this.bookOutput = data['numFound'];
+        this.booksArray = data['docs'];
+        this.loadingDialog.dismiss();
+        console.log(this.booksArray);
+        this.isShow = true;
+        this.onInput();
+      })
+    }
 
   }
 
@@ -46,12 +48,11 @@ export class Tab1Page {
   }
 
   async onInput() {
-    var entry = {"author" : this.inputAuthor, "book" : this.inputBook, "output" : this.bookOutput};
-    var history = JSON.parse((await Storage.get({key: this.KEY_HISTORY})).value);
-    
-    if(history === null)
-    {
-      var def = [{"author" : "author", "book" : "book", "output" : 0}];
+    var entry = { "author": this.inputAuthor, "book": this.inputBook, "output": this.bookOutput };
+    var history = JSON.parse((await Storage.get({ key: this.KEY_HISTORY })).value);
+
+    if (history === null) {
+      var def = [{ "author": "author", "book": "book", "output": 0 }];
 
       def.unshift(entry)
       await Storage.set({
@@ -59,14 +60,14 @@ export class Tab1Page {
         value: JSON.stringify(def),
       });
     }
-    else{
+    else {
       history.unshift(entry)
       await Storage.set({
         key: this.KEY_HISTORY,
         value: JSON.stringify(history),
       });
     }
-    
+
 
   }
 
