@@ -11,7 +11,7 @@ export class SearchBooksService {
       return this.http.get('http://openlibrary.org/search.json?title=' + book);
     }
     else if (book.length < 3 && author.length >= 3) {
-      return this.http.get('http://openlibrary.org/search.json?title=' + book);
+      return this.http.get('http://openlibrary.org/search.json?author=' + author);
     }
     else {
       return this.http.get('http://openlibrary.org/search.json?author=' + author + '&title=' + book);
