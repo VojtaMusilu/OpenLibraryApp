@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { HistoryService } from '../api/history.service';
-import { HistoryRecord } from '../models/history-record.model';
+import { Storage } from '@capacitor/storage';
 
 @Component({
   selector: 'app-tab2',
@@ -9,13 +8,15 @@ import { HistoryRecord } from '../models/history-record.model';
 })
 export class Tab2Page {
 
-  historyArray: HistoryRecord[]
+  historyArray: []
+  KEY_HISTORY = "search_history";
 
-  constructor(private historyService: HistoryService) { }
-
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     console.log('Method ionViewWillEnter was called.');
-    this.historyArray = this.historyService.getRecord();
+
+    this.historyArray = JSON.parse((await Storage.get({key: this.KEY_HISTORY})).value);
+    console.log(this.historyArray);
+
   }
 
 }

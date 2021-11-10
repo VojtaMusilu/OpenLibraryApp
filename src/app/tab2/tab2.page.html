@@ -17,7 +17,7 @@
   <ion-content>
     <ion-list>
         <ion-item *ngFor="let record of historyArray; let i = index">
-        <ion-label>{{ record.inputBook }} by {{ record.inputAuthor }} <ion-icon name="arrow-forward-outline"></ion-icon> {{ record.outputHistory }}</ion-label>
+        <ion-label>{{ record.book }} by {{ record.author }} <ion-icon name="arrow-forward-outline"></ion-icon> {{ record.output }}</ion-label>
       </ion-item>
     </ion-list>
   </ion-content>

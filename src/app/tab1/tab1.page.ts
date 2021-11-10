@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { SearchBooksService } from '../api/search-books.service';
 import { LoadingController } from '@ionic/angular';
-import { HistoryRecord } from '../models/history-record.model';
-import { HistoryService } from '../api/history.service';
 import { Storage } from '@capacitor/storage';
 
 @Component({
@@ -22,7 +20,6 @@ export class Tab1Page {
   constructor(
     private searchBooksService: SearchBooksService,
     public loadingController: LoadingController,
-    private historyService: HistoryService
   ) {
   }
 
@@ -32,8 +29,6 @@ export class Tab1Page {
       console.log(data);
       this.bookOutput = data['numFound'];
       this.booksArray = data['docs'];
-      //let record = new HistoryRecord(this.inputBook, this.inputAuthor, this.bookOutput);
-      //this.historyService.saveRecord(record);
       this.loadingDialog.dismiss();
       console.log(this.booksArray);
       this.isShow = true;
@@ -51,25 +46,8 @@ export class Tab1Page {
   }
 
   async onInput() {
-    //let numba = await this.btnSearchClicked();
-    //console.log("numba: " + numba);
-    //console.log(event.target.value);
     var entry = {"author" : this.inputAuthor, "book" : this.inputBook, "output" : this.bookOutput};
-    
-    // console.log("entry");
-    // console.log(entry);
-//    console.log(JSON.stringify(entry));
-   
-    // console.log("storage get");
-    // console.log(await Storage.get({key: this.KEY_HISTORY}));
-    
-    // console.log("storage get JSON parse");
     var history = JSON.parse((await Storage.get({key: this.KEY_HISTORY})).value);
-    // console.log(history);
-
-    
-
-    
     
     if(history === null)
     {
