@@ -14,6 +14,8 @@
   </ion-header>
 
 
+    <ion-button [routerLink]="['/detail', {key: '/works/OL13731150W'}]">Go to detail</ion-button>
+
 
   <ion-card>
     <ion-card-header>
@@ -46,7 +48,7 @@
         <ion-img src='{{"http://covers.openlibrary.org/b/olid/" + book.cover_edition_key + "-M.jpg"}}'></ion-img>
       </ion-thumbnail>
 
-      <ion-label>
+      <ion-label [routerLink]="['/detail', {key: book.key}]" >
         <h2>{{ book.title }}</h2>
         <h3>{{ book.author_name }}</h3>
       </ion-label>
