@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { DetailPage } from './detail/detail.page';
 
 const routes: Routes = [
   {
@@ -8,14 +9,12 @@ const routes: Routes = [
   },
   
   {
-    path: 'detail',
-    loadChildren: () => import('./detail/detail.module').then( m => m.DetailPageModule)
+    path: 'detail/:workKey',
+    component: DetailPage
   }
 ];
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

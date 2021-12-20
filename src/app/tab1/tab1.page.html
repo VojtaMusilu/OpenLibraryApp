@@ -48,7 +48,7 @@
         <ion-img src='{{"http://covers.openlibrary.org/b/olid/" + book.cover_edition_key + "-M.jpg"}}'></ion-img>
       </ion-thumbnail>
 
-      <ion-label [routerLink]="['/detail', {key: book.key}]" >
+      <ion-label [routerLink]="['/detail', book.key]" >
         <h2>{{ book.title }}</h2>
         <h3>{{ book.author_name }}</h3>
       </ion-label>
