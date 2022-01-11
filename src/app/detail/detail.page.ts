@@ -22,7 +22,11 @@ export class DetailPage implements OnInit, OnDestroy {
   subscription: Subscription;
 
 
-  constructor(private route: ActivatedRoute, private data: DataService, private getWorkService: GetWorkService, private routerOutlet: IonRouterOutlet) { }
+  constructor(private route: ActivatedRoute, 
+    private data: DataService, 
+    private getWorkService: GetWorkService, 
+    private routerOutlet: IonRouterOutlet
+    ) { }
 
   goBack() {
     this.routerOutlet.pop();
@@ -44,19 +48,7 @@ export class DetailPage implements OnInit, OnDestroy {
     this.subscription = this.data.currentMessage.subscribe(message => this.message = message)
 
     var string1 = JSON.stringify(this.message);
-    /*
-    console.log("string1: " + string1)
-    if (string1.trim().valueOf() === '"default"'.valueOf()) {
-      console.log("inside default message")
-      this.getWorkService.getWork(this.workKey).subscribe((data) => {
-        console.log(data);
-        this.book = data;
-      })
-    } else {
-      console.log("inside json")
-      this.book = JSON.parse(string1);
-    }
-    */
+
     this.book = JSON.parse(string1);
 
   }

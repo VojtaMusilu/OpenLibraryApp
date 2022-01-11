@@ -5,7 +5,7 @@ import { Storage } from '@capacitor/storage';
 
 import { DataService } from "../services/data.service";
 import { Subscription } from 'rxjs';
-import { stringify } from 'querystring';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
@@ -26,8 +26,18 @@ export class Tab1Page implements OnInit, OnDestroy {
   constructor(
     private searchBooksService: SearchBooksService,
     public loadingController: LoadingController,
-    private serviceData: DataService
+    private serviceData: DataService,
+    private route: ActivatedRoute,
+     private router: Router
   ) {
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        console.log(params)
+        this.inputAuthor = params.author
+        this.inputBook = params.book
+        this.btnSearchClicked()
+      }
+    });
   }
   
   ngOnInit() {
@@ -38,6 +48,13 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  public setBook(book:string){
+    this.inputBook = book;
+  }
+
+  public setAuthor(author:string){
+    this.inputAuthor = author;
+  }
 
   public btnSearchClicked(): void {
     if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
