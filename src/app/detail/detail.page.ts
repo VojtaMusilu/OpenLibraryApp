@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap, RouterOutlet } from '@angular/router';
 import { DataService } from "../services/data.service";
 import { Subscription } from 'rxjs';
+import { GetWorkService } from '../api/get-work.service';
+import { IonRouterOutlet } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -12,34 +14,50 @@ export class DetailPage implements OnInit, OnDestroy {
 
   workKey: string = "hello"
   author: string = "author"
+  title: string = "title"
+  firstSentence: string = "sentence"
+  book: Object = null
 
-  message:string;
+  message: string;
   subscription: Subscription;
 
-  constructor(private route: ActivatedRoute,private data: DataService) { }
 
+  constructor(private route: ActivatedRoute, private data: DataService, private getWorkService: GetWorkService, private routerOutlet: IonRouterOutlet) { }
 
+  goBack() {
+    this.routerOutlet.pop();
+}
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
 
   ngOnInit() {
-    this.subscription = this.data.currentMessage.subscribe(message => this.message = message)
-    console.log("subscription:");
-    console.log(this.message);
-    
     this.route.paramMap.subscribe(params => {
       console.log(this.workKey);
-      
+
       console.log(params);
-
       this.workKey = params.get("workKey");
-      this.author = params.get("author");
-
-
       console.log(this.workKey);
     });
+    
+    this.subscription = this.data.currentMessage.subscribe(message => this.message = message)
+
+    var string1 = JSON.stringify(this.message);
+    /*
+    console.log("string1: " + string1)
+    if (string1.trim().valueOf() === '"default"'.valueOf()) {
+      console.log("inside default message")
+      this.getWorkService.getWork(this.workKey).subscribe((data) => {
+        console.log(data);
+        this.book = data;
+      })
+    } else {
+      console.log("inside json")
+      this.book = JSON.parse(string1);
+    }
+    */
+    this.book = JSON.parse(string1);
 
   }
 

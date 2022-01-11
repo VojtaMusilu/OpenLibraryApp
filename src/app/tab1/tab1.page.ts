@@ -46,12 +46,10 @@ export class Tab1Page implements OnInit, OnDestroy {
         console.log(data);
         this.bookOutput = data['numFound'];
         this.booksArray = data['docs'];
-        this.booksArrayString = stringify(data['docs'])
         this.loadingDialog.dismiss();
         console.log(this.booksArray);
         this.isShow = true;
         this.onInput();
-        this.serviceData.changeMessage(this.booksArrayString);
       })
       
     }
@@ -87,6 +85,14 @@ export class Tab1Page implements OnInit, OnDestroy {
       });
     }
 
+
+  }
+
+  sendMessage(key: string) {
+    
+    this.booksArrayString = this.booksArray.find(i => i.key === key)
+    console.log(this.booksArrayString);
+    this.serviceData.changeMessage(this.booksArrayString);
 
   }
 

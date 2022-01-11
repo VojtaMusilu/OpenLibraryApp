@@ -1,21 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{workKey}}</ion-title>
+    <ion-buttons slot="start" (click)="goBack()">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
   <ion-card>
-    <img src="https://picsum.photos/400/600" />
+    <img src='{{"http://covers.openlibrary.org/b/olid/" + book.cover_edition_key + "-L.jpg"}}'/>
     <ion-card-header>
-      <ion-card-subtitle>Author</ion-card-subtitle>
-      <ion-card-title>Title</ion-card-title>
+      <ion-card-subtitle>{{book.author_name}}</ion-card-subtitle>
+      <ion-card-title>{{book.title}}</ion-card-title>
     </ion-card-header>
   
     <ion-card-content>
-      Keep close to Nature's heart... and break clear away, once in awhile,
-      and climb a mountain or spend a week in the woods. Wash your spirit clean.
+      {{book.first_sentence}}
     </ion-card-content>
   </ion-card>
 
