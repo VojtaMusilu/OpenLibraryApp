@@ -4,6 +4,8 @@ import { DataService } from "../services/data.service";
 import { Subscription } from 'rxjs';
 import { GetWorkService } from '../api/get-work.service';
 import { IonRouterOutlet } from '@ionic/angular';
+import { Storage } from '@capacitor/storage';
+
 
 @Component({
   selector: 'app-detail',
@@ -11,6 +13,9 @@ import { IonRouterOutlet } from '@ionic/angular';
   styleUrls: ['./detail.page.scss'],
 })
 export class DetailPage implements OnInit, OnDestroy {
+
+  KEY_LIBRARY = "my_library";
+
 
   workKey: string = "hello"
   author: string = "author"
@@ -50,6 +55,32 @@ export class DetailPage implements OnInit, OnDestroy {
     var string1 = JSON.stringify(this.message);
 
     this.book = JSON.parse(string1);
+
+  }
+
+
+  async onClick(bookKey: string, name : string, author: string, coverKey: string){
+  
+    var entry = { "key": bookKey, "name":name, "author": author, "coverKey": coverKey };
+
+    var library = JSON.parse((await Storage.get({ key: this.KEY_LIBRARY })).value);
+
+    if (library === null) {
+      var def = [{ "key":"key", "name":"name", "author": "author", "coverKey": "coverKey"}];
+
+      def.unshift(entry)
+      await Storage.set({
+        key: this.KEY_LIBRARY,
+        value: JSON.stringify(def),
+      });
+    }
+    else {
+      library.unshift(entry)
+      await Storage.set({
+        key: this.KEY_LIBRARY,
+        value: JSON.stringify(library),
+      });
+    }
 
   }
 
