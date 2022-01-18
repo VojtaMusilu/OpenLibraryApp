@@ -28,31 +28,35 @@ export class Tab1Page implements OnInit, OnDestroy {
     public loadingController: LoadingController,
     private serviceData: DataService,
     private route: ActivatedRoute,
-     private router: Router
+    private router: Router
   ) {
     this.route.queryParams.subscribe(params => {
       if (params) {
         console.log(params)
-        this.inputAuthor = params.author
-        this.inputBook = params.book
-        this.btnSearchClicked()
+        if (params.author != null || params.book != null) {
+          this.inputAuthor = params.author
+          this.inputBook = params.book
+          if (this.inputAuthor.length >= 3 || this.inputBook.length >= 3) {
+            this.btnSearchClicked()
+          }
+        }
       }
     });
   }
-  
+
   ngOnInit() {
     this.subscription = this.serviceData.currentMessage.subscribe(message => this.booksArrayString = message)
   }
-  
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  public setBook(book:string){
+  public setBook(book: string) {
     this.inputBook = book;
   }
 
-  public setAuthor(author:string){
+  public setAuthor(author: string) {
     this.inputAuthor = author;
   }
 
@@ -68,7 +72,7 @@ export class Tab1Page implements OnInit, OnDestroy {
         this.isShow = true;
         this.onInput();
       })
-      
+
     }
 
   }
@@ -106,7 +110,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
   sendMessage(key: string) {
-    
+
     this.booksArrayString = this.booksArray.find(i => i.key === key)
     console.log(this.booksArrayString);
     this.serviceData.changeMessage(this.booksArrayString);
