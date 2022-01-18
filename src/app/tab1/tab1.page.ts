@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class Tab1Page implements OnInit, OnDestroy {
   KEY_HISTORY = "search_history";
+  KEY_LIBRARY = "my_library";
 
   subscription: Subscription;
   inputAuthor: string = ""
@@ -115,6 +116,29 @@ export class Tab1Page implements OnInit, OnDestroy {
     console.log(this.booksArrayString);
     this.serviceData.changeMessage(this.booksArrayString);
 
+  }
+
+  async onClick(bookKey: string, name : string, author: string, coverKey: string){
+    var entry = { "key": bookKey, "name":name, "author": author, "coverKey": coverKey };
+
+    var library = JSON.parse((await Storage.get({ key: this.KEY_LIBRARY })).value);
+
+    if (library === null) {
+      var def = [{ "key":"key", "name":"name", "author": "author", "coverKey": "coverKey"}];
+
+      def.unshift(entry)
+      await Storage.set({
+        key: this.KEY_LIBRARY,
+        value: JSON.stringify(def),
+      });
+    }
+    else {
+      library.unshift(entry)
+      await Storage.set({
+        key: this.KEY_LIBRARY,
+        value: JSON.stringify(library),
+      });
+    }
   }
 
 }

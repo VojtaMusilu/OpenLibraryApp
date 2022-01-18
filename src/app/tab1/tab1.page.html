@@ -50,5 +50,9 @@
         <h3>{{ book.author_name }}</h3>
       </ion-label>
 
+      <ion-button (click)="onClick(book.key , book.title, book. author_name, book.cover_edition_key)">
+        <ion-icon slot="icon-only" name="library"></ion-icon>
+      </ion-button>
+
     </ion-item>
   </ion-list>

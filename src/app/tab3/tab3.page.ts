@@ -9,7 +9,9 @@ import { Storage } from '@capacitor/storage';
 export class Tab3Page {
 
   KEY_FIRST_NAME = "first_name";
+  KEY_LIBRARY = "my_library";
   firstName = "";
+  myLibrary: Array<any> = [];
 
   constructor() { 
     this.getName();
@@ -18,10 +20,11 @@ export class Tab3Page {
 
   private async getName(){
     const {value} = await Storage.get({
-      key: this.KEY_FIRST_NAME
+      key: this.KEY_LIBRARY
     });
 
-    this.firstName = JSON.parse(value);
+    this.myLibrary = JSON.parse(value);
+    console.log(this.myLibrary);
   }
 
   async onInput(event: any) {
@@ -32,5 +35,29 @@ export class Tab3Page {
       value: JSON.stringify(event.target.value),
     });
 
+  }
+
+  async onClick(bookKey:string){
+
+    console.log("bookKey: " + bookKey)
+    var index = this.myLibrary.findIndex(function(item){
+      return item.key === bookKey
+    });
+
+    console.log(index)
+
+    console.log(this.myLibrary)
+    //delete this.myLibrary[index];
+    this.myLibrary.splice(index,1);
+    console.log(this.myLibrary)
+
+
+    
+    await Storage.set({
+      key: this.KEY_LIBRARY,
+      value: JSON.stringify(this.myLibrary)
+      
+    })
+    
   }
 }
