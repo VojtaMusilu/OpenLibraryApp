@@ -69,10 +69,14 @@ export class Tab3Page {
     });
 
     await alert.present();
-
-
-
-
     
   }
+
+  doRefresh(event) {  
+    console.log('Pull Event Triggered!');  
+    setTimeout(() => {
+      this.loadLibrary();
+      event.target.complete();
+    }, 1500); 
+  }  
 }

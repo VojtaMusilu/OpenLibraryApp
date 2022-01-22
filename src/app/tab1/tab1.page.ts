@@ -4,7 +4,7 @@ import { LoadingController } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 
 import { DataService } from "../services/data.service";
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -16,6 +16,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   KEY_HISTORY = "search_history";
   KEY_LIBRARY = "my_library";
 
+  books: Observable<any>;
   subscription: Subscription;
   inputAuthor: string = ""
   inputBook: string = ""
@@ -64,7 +65,8 @@ export class Tab1Page implements OnInit, OnDestroy {
   public btnSearchClicked(): void {
     if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
       this.presentLoading();
-      this.searchBooksService.getBooks(this.inputBook, this.inputAuthor).subscribe((data) => {
+      this.books = this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
+      this.books.subscribe((data) => {
         console.log(data);
         this.bookOutput = data['numFound'];
         this.booksArray = data['docs'];

@@ -12,6 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { DataService } from './services/data.service';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -24,5 +26,6 @@ import { DataService } from './services/data.service';
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, DataService],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

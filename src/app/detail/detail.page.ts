@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { GetWorkService } from '../api/get-work.service';
 import { IonRouterOutlet } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
+import { IonicModule } from '@ionic/angular';
 
 
 @Component({
