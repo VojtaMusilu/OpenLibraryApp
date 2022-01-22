@@ -5,16 +5,25 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SearchBooksService {
 
+  search : string = ""
   constructor(private http: HttpClient) { }
-  public getBooks(book: String, author: String) {
+  public getBooks(book: String, author: String, page:number = 1) {
     if (book.length >= 3 && author.length < 3) {
-      return this.http.get('http://openlibrary.org/search.json?title=' + book);
+      this.search = ('http://openlibrary.org/search.json?title=' + book);
     }
     else if (book.length < 3 && author.length >= 3) {
-      return this.http.get('http://openlibrary.org/search.json?author=' + author);
+      this.search = ('http://openlibrary.org/search.json?author=' + author);
     }
     else {
-      return this.http.get('http://openlibrary.org/search.json?author=' + author + '&title=' + book);
+      this.search = 'http://openlibrary.org/search.json?author=' + author + '&title=' + book;
     }
+
+    if(page > 0){
+      this.search = this.search + "&page=" + page;
+    }
+
+    return this.http.get(this.search);
+
+
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SearchBooksService } from '../api/search-books.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 
 import { DataService } from "../services/data.service";
@@ -16,11 +16,12 @@ export class Tab1Page implements OnInit, OnDestroy {
   KEY_HISTORY = "search_history";
   KEY_LIBRARY = "my_library";
 
+  page: number = 1;
   books: Observable<any>;
   subscription: Subscription;
   inputAuthor: string = ""
   inputBook: string = ""
-  bookOutput: number = 0
+  bookCount: number = 0
   booksArray: Array<any> = []
   booksArrayString: string = ""
   loadingDialog: any
@@ -30,7 +31,8 @@ export class Tab1Page implements OnInit, OnDestroy {
     public loadingController: LoadingController,
     private serviceData: DataService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public toastController: ToastController
   ) {
     this.route.queryParams.subscribe(params => {
       if (params) {
@@ -68,7 +70,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       this.books = this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
       this.books.subscribe((data) => {
         console.log(data);
-        this.bookOutput = data['numFound'];
+        this.bookCount = data['numFound'];
         this.booksArray = data['docs'];
         this.loadingDialog.dismiss();
         console.log(this.booksArray);
@@ -89,7 +91,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
   async onInput() {
-    var entry = { "author": this.inputAuthor, "book": this.inputBook, "output": this.bookOutput };
+    var entry = { "author": this.inputAuthor, "book": this.inputBook, "output": this.bookCount };
     var history = JSON.parse((await Storage.get({ key: this.KEY_HISTORY })).value);
 
     if (history === null) {
@@ -120,31 +122,65 @@ export class Tab1Page implements OnInit, OnDestroy {
 
   }
 
-  async onClick(bookKey: string, name : string, author: string, coverKey: string){
-    var entry = { "key": bookKey, "name":name, "author": author, "coverKey": coverKey };
+  async onClick(bookKey: string, name: string, author: string, coverKey: string) {
+    var entry = { "key": bookKey, "name": name, "author": author, "coverKey": coverKey };
 
-    var library = JSON.parse((await Storage.get({ key: this.KEY_LIBRARY })).value);
+    var libraryString = (await Storage.get({ key: this.KEY_LIBRARY })).value;
+    if(!libraryString.includes(JSON.stringify(entry))){
+      var library = JSON.parse(libraryString);
 
-    if (library === null) {
-      var def = [{ "key":"key", "name":"name", "author": "author", "coverKey": "coverKey"}];
-
-      def.unshift(entry)
-      await Storage.set({
-        key: this.KEY_LIBRARY,
-        value: JSON.stringify(def),
-      });
+      if (library === null) {
+        var def = [{ "key": "key", "name": "name", "author": "author", "coverKey": "coverKey" }];
+  
+        def.unshift(entry)
+        await Storage.set({
+          key: this.KEY_LIBRARY,
+          value: JSON.stringify(def),
+        });
+      }
+      else {
+        library.unshift(entry)
+        await Storage.set({
+          key: this.KEY_LIBRARY,
+          value: JSON.stringify(library),
+        });
+      }
     }
-    else {
-      library.unshift(entry)
-      await Storage.set({
-        key: this.KEY_LIBRARY,
-        value: JSON.stringify(library),
-      });
-    }
+
+
   }
 
+
+  loadData(event) {
+
+
+
+    this.page++;
+
+
+    this.books = this.searchBooksService.getBooks(this.inputBook, this.inputAuthor, this.page);
+    this.books.subscribe((data) => {
+
+      this.booksArray = this.booksArray.concat(data['docs']);
+      console.log(this.booksArray);
+      event.target.complete();
+    });
+
+    if (this.booksArray.length + 100 > this.bookCount) {
+      event.target.disabled = true;
+      this.presentToast();
+    }
+
+  }
+
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'All books found based on your search are loaded.',
+      duration: 2000,
+    });
+    toast.present();
+  }
+
+
 }
-
-
-
-
