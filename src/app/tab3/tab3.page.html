@@ -29,10 +29,10 @@
         <h2>{{ book.name }}</h2>
         <h3>{{ book.author }}</h3>
       </ion-label>
-      <ion-button (click)="onClick(book.key)" size="small" color="danger">
+      <ion-button (click)="onClick(book.key)" size="small" color="danger" slot="end">
         <ion-icon name="close"></ion-icon>
       </ion-button>
-      <ion-reorder slot="end"></ion-reorder>
+      <ion-reorder slot="end" class="ion-no-margin"></ion-reorder>
     </ion-item>
   </ion-reorder-group>
 

@@ -84,27 +84,24 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.inputAuthor = author;
   }
 
-  public async btnSearchClicked() {
+  public  btnSearchClicked() {
     if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
       this.presentLoading();
-      this.books = await this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
+      this.books =  this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
       console.log("yah")
-      await this.books.subscribe(data => {
+       this.books.subscribe(data => {
         console.log(data);
         this.bookCount = data['numFound'];
         this.booksArray = data['docs'];
         console.log(this.booksArray);
         this.isShow = true;
-        this.onInput();
+        this.saveHistory();
         this.loadingDialog.dismiss();
 
       },
 
         error => {
           console.log("EE:", error);
-
-
-
           this.presentError().then(() => {
             this.loadingDialog.dismiss()
           });
@@ -112,11 +109,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       )
     }
   }
-  async dismiss() {
-    while (await this.loadingController.getTop() !== undefined) {
-      await this.loadingController.dismiss();
-    }
-  }
+
   async presentLoading() {
     this.loadingDialog = await this.loadingController.create(
       {
@@ -135,7 +128,8 @@ export class Tab1Page implements OnInit, OnDestroy {
     await this.errorDialog.present();
   }
 
-  async onInput() {
+  async saveHistory() {
+    
     var entry = { "author": this.inputAuthor, "book": this.inputBook, "output": this.bookCount };
     var history = JSON.parse((await Storage.get({ key: this.KEY_HISTORY })).value);
 
@@ -149,7 +143,15 @@ export class Tab1Page implements OnInit, OnDestroy {
     console.log(history[0]);
     console.log(entry)
 
-    if (history.length == 0 || (history[0].author !== entry.author && history[0].book !== entry.book)) {
+    if(history[0].author !== entry.author){
+      console.log("ya author")
+    }
+    if(history[0].book !== entry.book){
+      console.log("ya book")
+    }
+
+
+    if (history.length == 0 || (history[0].author !== entry.author || history[0].book !== entry.book)) {
       console.log("insideeeeeeeeee")
       history.unshift(entry)
       await Storage.set({

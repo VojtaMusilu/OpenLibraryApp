@@ -20,22 +20,25 @@
 
         <ion-grid>
           <ion-row>
-            <ion-col size="11">
+            <ion-col size="10">
               Author: {{ record.author }}
             </ion-col>
             <ion-col>
-              <ion-icon name="close-outline" (click)="deleteHistory(i)"></ion-icon>
+              <ion-button color="danger" class="ion-no-margin" (click)="deleteHistory(i)"  size="small">
+                <ion-icon name="close" ></ion-icon>
+              </ion-button>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="11">
-              Book: {{ record.book }} 
+            <ion-col size="10">
+              Book: {{ record.book }}
             </ion-col>
             <ion-col>
               <!--<ion-icon name="reload-outline" (click)="searchHistory(record.book, record.author)"></ion-icon>-->
-              <a [routerLink]="['/tabs/tab1']" [queryParams]="{author: record.author, book: record.book}">
-                <ion-icon name="reload-outline"></ion-icon>
-              </a>
+              <ion-button color="primary" class="ion-no-margin"  size="small" [routerLink]="['/tabs/tab1']" [queryParams]="{author: record.author, book: record.book}">
+                  <ion-icon name="reload"></ion-icon>
+              </ion-button>
+
             </ion-col>
           </ion-row>
         </ion-grid>
