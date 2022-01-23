@@ -17,11 +17,29 @@
   <ion-content>
     <ion-list>
       <ion-item *ngFor="let record of historyArray; let i = index">
-        <ion-label>
-          {{ record.book }} by {{ record.author }} <ion-icon name="arrow-forward-outline"></ion-icon> {{ record.output}}
-        </ion-label>
-        <!--<ion-icon name="reload-outline" slot="end" [routerLink]="['/tabs/tab1']"></ion-icon>-->
-        <ion-icon name="reload-outline" slot="end" (click)="searchHistory(record.book, record.author)"></ion-icon>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col size="11">
+              Author: {{ record.author }}
+            </ion-col>
+            <ion-col>
+              <ion-icon name="close-outline" (click)="deleteHistory(i)"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="11">
+              Book: {{ record.book }} 
+            </ion-col>
+            <ion-col>
+              <!--<ion-icon name="reload-outline" (click)="searchHistory(record.book, record.author)"></ion-icon>-->
+              <a [routerLink]="['/tabs/tab1']" [queryParams]="{author: record.author, book: record.book}">
+                <ion-icon name="reload-outline"></ion-icon>
+              </a>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
 
       </ion-item>
     </ion-list>

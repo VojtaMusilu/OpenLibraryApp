@@ -9,7 +9,7 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class Tab2Page {
 
-  historyArray: []
+  historyArray:any[] = []
   KEY_HISTORY = "search_history";
 
   constructor(private router: Router) {}
@@ -23,19 +23,24 @@ export class Tab2Page {
   }
 
   public searchHistory(book:string, author:string): void {
-    console.log("hissssssssss")
-    //var params = "?book="+book+"&author=" +author
-    var params = {
-      authorSearch: author,
-      bookSearch: book
-    }
     let navigationExtras: NavigationExtras = {
+      replaceUrl: true,
       queryParams: {
         author: author,
         book: book
       }
+      
     };
-    this.router.navigate(['tabs/tab1'],navigationExtras )
+    this.router.navigate(['tabs/tab1'],navigationExtras, )
+  }
+
+
+  async deleteHistory(index:number){
+    this.historyArray.splice(index,1);
+    await Storage.set({
+      key: this.KEY_HISTORY,
+      value: JSON.stringify(this.historyArray),
+    });
   }
 
 }

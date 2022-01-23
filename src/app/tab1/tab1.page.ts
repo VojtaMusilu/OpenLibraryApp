@@ -5,7 +5,8 @@ import { Storage } from '@capacitor/storage';
 
 import { DataService } from "../services/data.service";
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-tab1',
@@ -21,6 +22,10 @@ export class Tab1Page implements OnInit, OnDestroy {
   subscription: Subscription;
   inputAuthor: string = ""
   inputBook: string = ""
+  
+  prevAuthor: string = ""
+  prevBook: string = ""
+
   bookCount: number = 0
   booksArray: Array<any> = []
   booksArrayString: string = ""
@@ -32,24 +37,34 @@ export class Tab1Page implements OnInit, OnDestroy {
     private serviceData: DataService,
     private route: ActivatedRoute,
     private router: Router,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public location: Location
   ) {
-    this.route.queryParams.subscribe(params => {
-      if (params) {
-        console.log(params)
-        if (params.author != null || params.book != null) {
-          this.inputAuthor = params.author
-          this.inputBook = params.book
-          if (this.inputAuthor.length >= 3 || this.inputBook.length >= 3) {
-            this.btnSearchClicked()
-          }
-        }
-      }
-    });
+   
   }
 
   ngOnInit() {
     this.subscription = this.serviceData.currentMessage.subscribe(message => this.booksArrayString = message)
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        console.log(params)
+        if (params.author != null || params.book != null) {
+          console.log("params not null");
+          console.log("author: " + this.inputAuthor + ",   book:" + this.inputBook);
+
+          if (params.author != this.prevAuthor || params.book != this.prevBook) {
+            console.log("params not same");
+            this.inputAuthor = params.author
+            this.inputBook = params.book
+            this.prevAuthor = params.author
+            this.prevBook = params.book
+            if (this.inputAuthor.length >= 3 || this.inputBook.length >= 3) {
+              this.btnSearchClicked()
+            }
+          }
+        }
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -95,21 +110,15 @@ export class Tab1Page implements OnInit, OnDestroy {
     var history = JSON.parse((await Storage.get({ key: this.KEY_HISTORY })).value);
 
     if (history === null) {
-      var def = [{ "author": "author", "book": "book", "output": 0 }];
+      history = [];
+    }
 
-      def.unshift(entry)
-      await Storage.set({
-        key: this.KEY_HISTORY,
-        value: JSON.stringify(def),
-      });
-    }
-    else {
-      history.unshift(entry)
-      await Storage.set({
-        key: this.KEY_HISTORY,
-        value: JSON.stringify(history),
-      });
-    }
+    history.unshift(entry)
+    await Storage.set({
+      key: this.KEY_HISTORY,
+      value: JSON.stringify(history),
+    });
+
 
 
   }
@@ -126,37 +135,35 @@ export class Tab1Page implements OnInit, OnDestroy {
     var entry = { "key": bookKey, "name": name, "author": author, "coverKey": coverKey };
 
     var libraryString = (await Storage.get({ key: this.KEY_LIBRARY })).value;
-    if(!libraryString.includes(JSON.stringify(entry))){
-      var library = JSON.parse(libraryString);
 
-      if (library === null) {
-        var def = [{ "key": "key", "name": "name", "author": "author", "coverKey": "coverKey" }];
-  
-        def.unshift(entry)
-        await Storage.set({
-          key: this.KEY_LIBRARY,
-          value: JSON.stringify(def),
-        });
-      }
-      else {
-        library.unshift(entry)
-        await Storage.set({
-          key: this.KEY_LIBRARY,
-          value: JSON.stringify(library),
-        });
-      }
+    var library = JSON.parse(libraryString);
+
+    if (library === null) {
+      library = []
     }
 
+    if (libraryString === null) {
+      libraryString = "";
+    }
+
+    if (!libraryString.includes(JSON.stringify(entry))) {
+      library.unshift(entry)
+      await Storage.set({
+        key: this.KEY_LIBRARY,
+        value: JSON.stringify(library),
+      });
+      this.presentToastFavorite();
+    }
+    else{
+      this.presentToastFavoriteFail();
+    }
 
   }
 
 
   loadData(event) {
 
-
-
     this.page++;
-
 
     this.books = this.searchBooksService.getBooks(this.inputBook, this.inputAuthor, this.page);
     this.books.subscribe((data) => {
@@ -168,15 +175,32 @@ export class Tab1Page implements OnInit, OnDestroy {
 
     if (this.booksArray.length + 100 > this.bookCount) {
       event.target.disabled = true;
-      this.presentToast();
+      this.presentToastLoaded();
     }
 
   }
 
 
-  async presentToast() {
+  async presentToastLoaded() {
     const toast = await this.toastController.create({
       message: 'All books found based on your search are loaded.',
+      duration: 3000,
+    });
+    toast.present();
+  }
+
+
+  async presentToastFavorite() {
+    const toast = await this.toastController.create({
+      message: 'Added book to your favorites list!',
+      duration: 2000,
+    });
+    toast.present();
+  }
+  
+  async presentToastFavoriteFail() {
+    const toast = await this.toastController.create({
+      message: 'Book is already in your favorites list',
       duration: 2000,
     });
     toast.present();

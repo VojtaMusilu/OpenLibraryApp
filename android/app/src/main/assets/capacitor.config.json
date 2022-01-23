@@ -1,6 +1,6 @@
 {
 	"appId": "io.ionic.starter",
-	"appName": "OpenLibraryApp",
+	"appName": "My Library",
 	"webDir": "www",
 	"bundledWebRuntime": false,
 	"plugins": {
