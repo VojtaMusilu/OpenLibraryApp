@@ -15,14 +15,53 @@
       <ion-card-title>{{book.title}}</ion-card-title>
     </ion-card-header>
   
-    <ion-card-content>
-      {{book.first_sentence}}
-    </ion-card-content>
-
     <ion-button expand="block" (click)="onClick(book.key , book.title, book. author_name, book.cover_edition_key)">
       <ion-icon name="library" slot="start"></ion-icon>
       Add book to my library
     </ion-button>
+
+    <ion-card-content>
+      {{book.first_sentence}}
+    </ion-card-content>
+
+    <ion-list>
+      <ion-item>     
+        <ion-label class="ion-text-wrap">
+          <h2>First published in:</h2>
+          <p>{{book.first_publish_date}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>     
+        <ion-label class="ion-text-wrap">
+          <h2>Language:</h2>
+          <p>{{book.language}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          <h2>ISBN:</h2>
+          <p>{{book.isbn}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>     
+        <ion-label class="ion-text-wrap">
+          <h2>Publisher:</h2>
+          <p>{{book.publisher}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>     
+        <ion-label class="ion-text-wrap">
+          <h2>Publication place:</h2>
+          <p>{{book.publish_place}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          <h2>Publication date:</h2>
+          <p>{{book.publish_date}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
 
   </ion-card>
 

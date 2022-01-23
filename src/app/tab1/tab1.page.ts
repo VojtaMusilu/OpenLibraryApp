@@ -22,7 +22,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   subscription: Subscription;
   inputAuthor: string = ""
   inputBook: string = ""
-  
+
   prevAuthor: string = ""
   prevBook: string = ""
 
@@ -40,7 +40,7 @@ export class Tab1Page implements OnInit, OnDestroy {
     public toastController: ToastController,
     public location: Location
   ) {
-   
+
   }
 
   ngOnInit() {
@@ -113,13 +113,20 @@ export class Tab1Page implements OnInit, OnDestroy {
       history = [];
     }
 
-    history.unshift(entry)
-    await Storage.set({
-      key: this.KEY_HISTORY,
-      value: JSON.stringify(history),
-    });
 
+    console.log("his0: " + history[0] + "   entry:" + entry)
+    console.log(history[0]);
+    console.log(entry)
 
+    if (history[0].author !== entry.author 
+      && history[0].book !== entry.book) {
+      history.unshift(entry)
+      await Storage.set({
+        key: this.KEY_HISTORY,
+        value: JSON.stringify(history),
+      });
+
+    }
 
   }
 
@@ -154,7 +161,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       });
       this.presentToastFavorite();
     }
-    else{
+    else {
       this.presentToastFavoriteFail();
     }
 
@@ -197,7 +204,7 @@ export class Tab1Page implements OnInit, OnDestroy {
     });
     toast.present();
   }
-  
+
   async presentToastFavoriteFail() {
     const toast = await this.toastController.create({
       message: 'Book is already in your favorites list',
