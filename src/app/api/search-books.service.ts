@@ -22,7 +22,7 @@ export class SearchBooksService {
       this.search = this.search + "&page=" + page;
     }
 
-    return this.http.get(this.search);
+    return this.http.get(this.search)
 
 
   }

@@ -13,19 +13,23 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { DataService } from './services/data.service';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ToastFavoriteComponent } from './toast-favorite/toast-favorite.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ToastFavoriteComponent],
   entryComponents: [],
   imports: [
     BrowserModule, 
     HttpClientModule, 
     IonicModule.forRoot(), 
     IonicStorageModule.forRoot(), 
-    AppRoutingModule
+    AppRoutingModule,
+    //ToastFavoriteComponent
+
   ],
+  exports:[],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, DataService],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent,ToastFavoriteComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

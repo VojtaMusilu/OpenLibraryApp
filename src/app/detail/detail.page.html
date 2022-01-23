@@ -15,14 +15,16 @@
       <ion-card-title>{{book.title}}</ion-card-title>
     </ion-card-header>
   
+    <ion-card-content>
+      {{book.first_sentence}}
+    </ion-card-content>
+
     <ion-button expand="block" (click)="onClick(book.key , book.title, book. author_name, book.cover_edition_key)">
       <ion-icon name="library" slot="start"></ion-icon>
       Add book to my library
     </ion-button>
 
-    <ion-card-content>
-      {{book.first_sentence}}
-    </ion-card-content>
+
 
     <ion-list>
       <ion-item>     

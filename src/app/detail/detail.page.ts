@@ -6,7 +6,7 @@ import { GetWorkService } from '../api/get-work.service';
 import { IonRouterOutlet } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 import { IonicModule } from '@ionic/angular';
-
+import { ToastFavoriteComponent } from '../toast-favorite/toast-favorite.component';
 
 @Component({
   selector: 'app-detail',
@@ -31,7 +31,8 @@ export class DetailPage implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, 
     private data: DataService, 
     private getWorkService: GetWorkService, 
-    private routerOutlet: IonRouterOutlet
+    private routerOutlet: IonRouterOutlet,
+    public toast: ToastFavoriteComponent
     ) { }
 
   goBack() {
@@ -62,27 +63,31 @@ export class DetailPage implements OnInit, OnDestroy {
 
   async onClick(bookKey: string, name : string, author: string, coverKey: string){
   
-    var entry = { "key": bookKey, "name":name, "author": author, "coverKey": coverKey };
+    var entry = { "key": bookKey, "name": name, "author": author, "coverKey": coverKey };
 
-    var library = JSON.parse((await Storage.get({ key: this.KEY_LIBRARY })).value);
+    var libraryString = (await Storage.get({ key: this.KEY_LIBRARY })).value;
+
+    var library = JSON.parse(libraryString);
 
     if (library === null) {
-      var def = [{ "key":"key", "name":"name", "author": "author", "coverKey": "coverKey"}];
-
-      def.unshift(entry)
-      await Storage.set({
-        key: this.KEY_LIBRARY,
-        value: JSON.stringify(def),
-      });
+      library = []
     }
-    else {
+
+    if (libraryString === null) {
+      libraryString = "";
+    }
+
+    if (!libraryString.includes(JSON.stringify(entry))) {
       library.unshift(entry)
       await Storage.set({
         key: this.KEY_LIBRARY,
         value: JSON.stringify(library),
       });
+      this.toast.presentToastFavorite();
     }
-
+    else {
+      this.toast.presentToastFavoriteFail();
+    }
   }
 
 }

@@ -7,6 +7,9 @@ import { DataService } from "../services/data.service";
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ToastFavoriteComponent } from '../toast-favorite/toast-favorite.component';
+import { error } from 'protractor';
+
 
 @Component({
   selector: 'app-tab1',
@@ -30,6 +33,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   booksArray: Array<any> = []
   booksArrayString: string = ""
   loadingDialog: any
+  errorDialog: any
   isShow = false
   constructor(
     private searchBooksService: SearchBooksService,
@@ -38,7 +42,8 @@ export class Tab1Page implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     public toastController: ToastController,
-    public location: Location
+    public location: Location,
+    public toast: ToastFavoriteComponent
   ) {
 
   }
@@ -79,30 +84,55 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.inputAuthor = author;
   }
 
-  public btnSearchClicked(): void {
+  public async btnSearchClicked() {
     if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
       this.presentLoading();
-      this.books = this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
-      this.books.subscribe((data) => {
+      this.books = await this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
+      console.log("yah")
+      await this.books.subscribe(data => {
         console.log(data);
         this.bookCount = data['numFound'];
         this.booksArray = data['docs'];
-        this.loadingDialog.dismiss();
         console.log(this.booksArray);
         this.isShow = true;
         this.onInput();
-      })
+        this.loadingDialog.dismiss();
 
+      },
+
+        error => {
+          console.log("EE:", error);
+
+
+
+          this.presentError().then(() => {
+            this.loadingDialog.dismiss()
+          });
+        }
+      )
     }
-
   }
-
+  async dismiss() {
+    while (await this.loadingController.getTop() !== undefined) {
+      await this.loadingController.dismiss();
+    }
+  }
   async presentLoading() {
     this.loadingDialog = await this.loadingController.create(
       {
-        message: 'Retrieving books ...',
+        message: 'Looking for books ...',
       });
     await this.loadingDialog.present();
+  }
+
+  async presentError() {
+    this.errorDialog = await this.loadingController.create(
+      {
+        message: 'Sorry! There was an error while searching for books. Try again later.',
+        spinner: null,
+        duration: 5000
+      });
+    await this.errorDialog.present();
   }
 
   async onInput() {
@@ -110,6 +140,7 @@ export class Tab1Page implements OnInit, OnDestroy {
     var history = JSON.parse((await Storage.get({ key: this.KEY_HISTORY })).value);
 
     if (history === null) {
+      console.log("history null")
       history = [];
     }
 
@@ -118,8 +149,8 @@ export class Tab1Page implements OnInit, OnDestroy {
     console.log(history[0]);
     console.log(entry)
 
-    if (history[0].author !== entry.author 
-      && history[0].book !== entry.book) {
+    if (history.length == 0 || (history[0].author !== entry.author && history[0].book !== entry.book)) {
+      console.log("insideeeeeeeeee")
       history.unshift(entry)
       await Storage.set({
         key: this.KEY_HISTORY,
@@ -159,10 +190,10 @@ export class Tab1Page implements OnInit, OnDestroy {
         key: this.KEY_LIBRARY,
         value: JSON.stringify(library),
       });
-      this.presentToastFavorite();
+      this.toast.presentToastFavorite();
     }
     else {
-      this.presentToastFavoriteFail();
+      this.toast.presentToastFavoriteFail();
     }
 
   }
@@ -197,21 +228,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
 
-  async presentToastFavorite() {
-    const toast = await this.toastController.create({
-      message: 'Added book to your favorites list!',
-      duration: 2000,
-    });
-    toast.present();
-  }
 
-  async presentToastFavoriteFail() {
-    const toast = await this.toastController.create({
-      message: 'Book is already in your favorites list',
-      duration: 2000,
-    });
-    toast.present();
-  }
 
 
 }
