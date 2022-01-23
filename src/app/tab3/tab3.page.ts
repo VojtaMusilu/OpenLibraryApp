@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Storage } from '@capacitor/storage';
 import { AlertController } from '@ionic/angular';
+import { ItemReorderEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-tab3',
@@ -79,4 +80,25 @@ export class Tab3Page {
       event.target.complete();
     }, 1500); 
   }  
+
+  doReorder(ev: CustomEvent<ItemReorderEventDetail>) {
+    // The `from` and `to` properties contain the index of the item
+    // when the drag started and ended, respectively
+    console.log('Dragged from index', ev.detail.from, 'to', ev.detail.to);
+
+    const draggedItem = this.myLibrary.splice(ev.detail.from, 1)[0];  
+     this.myLibrary.splice(ev.detail.to, 0, draggedItem); 
+     
+     Storage.set({
+      key: this.KEY_LIBRARY,
+      value: JSON.stringify(this.myLibrary)
+      
+    })
+    // Finish the reorder and position the item in the DOM based on
+    // where the gesture ended. This method can also be called directly
+    // by the reorder group
+    ev.detail.complete();
+  }
+
+
 }

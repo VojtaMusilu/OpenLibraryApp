@@ -17,7 +17,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-list>
+  <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false">
     <ion-item *ngFor="let book of myLibrary">
 
       <ion-thumbnail slot="start">
@@ -30,9 +30,10 @@
         <h3>{{ book.author }}</h3>
       </ion-label>
       <ion-button (click)="onClick(book.key)" size="small" color="danger">
-        Remove
+        <ion-icon name="close"></ion-icon>
       </ion-button>
+      <ion-reorder slot="end"></ion-reorder>
     </ion-item>
-  </ion-list>
+  </ion-reorder-group>
 
 </ion-content>
