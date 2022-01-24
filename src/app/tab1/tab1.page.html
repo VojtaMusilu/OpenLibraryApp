@@ -27,7 +27,7 @@
 
 
   <ion-list>
-    <ion-list-header *ngIf = isShow>{{bookCount}} books match your request</ion-list-header>
+    <ion-list-header *ngIf = "bookCount >= 0">{{bookCount}} books match your request</ion-list-header>
 
     <ion-item *ngFor="let book of booksArray; let i = index">
 

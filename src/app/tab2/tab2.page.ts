@@ -16,11 +16,8 @@ export class Tab2Page {
   constructor(private router: Router,public alertController: AlertController) {}
 
   async ionViewWillEnter() {
-    console.log('Method ionViewWillEnter was called.');
-
     this.historyArray = JSON.parse((await Storage.get({key: this.KEY_HISTORY})).value);
     console.log(this.historyArray);
-
   }
 
   searchHistory(book:string, author:string): void {

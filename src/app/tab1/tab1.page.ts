@@ -5,10 +5,9 @@ import { Storage } from '@capacitor/storage';
 
 import { DataService } from "../services/data.service";
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastFavoriteComponent } from '../toast-favorite/toast-favorite.component';
-import { error } from 'protractor';
 
 
 @Component({
@@ -21,26 +20,28 @@ export class Tab1Page implements OnInit, OnDestroy {
   KEY_LIBRARY = "my_library";
 
   page: number = 1;
-  books: Observable<any>;
-  subscription: Subscription;
   inputAuthor: string = ""
   inputBook: string = ""
 
   prevAuthor: string = ""
   prevBook: string = ""
 
-  bookCount: number = 0
   booksArray: Array<any> = []
   booksArrayString: string = ""
+  bookCount: number
+
   loadingDialog: any
   errorDialog: any
-  isShow = false
+
+  books: Observable<any>;
+  subscription: Subscription;
+
+
   constructor(
     private searchBooksService: SearchBooksService,
     public loadingController: LoadingController,
     private serviceData: DataService,
     private route: ActivatedRoute,
-    private router: Router,
     public toastController: ToastController,
     public location: Location,
     public toast: ToastFavoriteComponent
@@ -92,13 +93,9 @@ export class Tab1Page implements OnInit, OnDestroy {
     if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
       this.presentLoading();
       this.books =  this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
-      console.log("yah")
        this.books.subscribe(data => {
-        console.log(data);
         this.bookCount = data['numFound'];
         this.booksArray = data['docs'];
-        console.log(this.booksArray);
-        this.isShow = true;
         this.saveHistory();
         this.loadingDialog.dismiss();
         searchBtn.setAttribute("disabled", "false");
@@ -109,8 +106,8 @@ export class Tab1Page implements OnInit, OnDestroy {
           console.log("EE:", error);
           this.presentError().then(() => {
             this.loadingDialog.dismiss()
+            searchBtn.setAttribute("disabled", "false");
           });
-          searchBtn.setAttribute("disabled", "false");
 
         }
       )
@@ -143,7 +140,6 @@ export class Tab1Page implements OnInit, OnDestroy {
     var history = JSON.parse((await Storage.get({ key: this.KEY_HISTORY })).value);
 
     if (history === null) {
-      console.log("history null")
       history = [];
       history.unshift(entry);
       await Storage.set({
@@ -165,11 +161,8 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
   sendMessage(key: string) {
-
     this.booksArrayString = this.booksArray.find(i => i.key === key)
-    console.log(this.booksArrayString);
     this.serviceData.changeMessage(this.booksArrayString);
-
   }
 
   async onClick(bookKey: string, name: string, author: string, coverKey: string) {
@@ -208,9 +201,7 @@ export class Tab1Page implements OnInit, OnDestroy {
 
     this.books = this.searchBooksService.getBooks(this.inputBook, this.inputAuthor, this.page);
     this.books.subscribe((data) => {
-
       this.booksArray = this.booksArray.concat(data['docs']);
-      console.log(this.booksArray);
       event.target.complete();
     });
 

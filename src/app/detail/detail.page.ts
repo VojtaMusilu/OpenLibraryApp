@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap, RouterOutlet } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { DataService } from "../services/data.service";
 import { Subscription } from 'rxjs';
-import { GetWorkService } from '../api/get-work.service';
 import { IonRouterOutlet } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
-import { IonicModule } from '@ionic/angular';
 import { ToastFavoriteComponent } from '../toast-favorite/toast-favorite.component';
 
 @Component({
@@ -30,7 +28,6 @@ export class DetailPage implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, 
     private data: DataService, 
-    private getWorkService: GetWorkService, 
     private routerOutlet: IonRouterOutlet,
     public toast: ToastFavoriteComponent
     ) { }
@@ -45,11 +42,7 @@ export class DetailPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      console.log(this.workKey);
-
-      console.log(params);
       this.workKey = params.get("workKey");
-      console.log(this.workKey);
     });
     
     this.subscription = this.data.currentMessage.subscribe(message => this.message = message)

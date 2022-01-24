@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Storage } from '@capacitor/storage';
 import { AlertController } from '@ionic/angular';
 import { ItemReorderEventDetail } from '@ionic/core';
@@ -27,7 +27,6 @@ export class Tab3Page {
     });
 
     this.myLibrary = JSON.parse(value);
-    console.log(this.myLibrary);
   }
 
   async deleteItem(bookKey: string) {
@@ -48,19 +47,11 @@ export class Tab3Page {
           text: 'Yes',
           handler: () => {
 
-            console.log("bookKey: " + bookKey)
             var index = this.myLibrary.findIndex(function (item) {
               return item.key === bookKey
             });
 
-            console.log(index)
-
-            console.log(this.myLibrary)
-            //delete this.myLibrary[index];
             this.myLibrary.splice(index, 1);
-            console.log(this.myLibrary)
-
-
 
             Storage.set({
               key: this.KEY_LIBRARY,
@@ -109,7 +100,6 @@ export class Tab3Page {
   }
 
   doRefresh(event) {
-    console.log('Pull Event Triggered!');
     setTimeout(() => {
       this.loadLibrary();
       event.target.complete();
@@ -117,9 +107,7 @@ export class Tab3Page {
   }
 
   doReorder(ev: CustomEvent<ItemReorderEventDetail>) {
-    // The `from` and `to` properties contain the index of the item
-    // when the drag started and ended, respectively
-    console.log('Dragged from index', ev.detail.from, 'to', ev.detail.to);
+    console.log('Dragged from index '+ ev.detail.from + ' to ' + ev.detail.to);
 
     const draggedItem = this.myLibrary.splice(ev.detail.from, 1)[0];
     this.myLibrary.splice(ev.detail.to, 0, draggedItem);
@@ -129,9 +117,7 @@ export class Tab3Page {
       value: JSON.stringify(this.myLibrary)
 
     })
-    // Finish the reorder and position the item in the DOM based on
-    // where the gesture ended. This method can also be called directly
-    // by the reorder group
+
     ev.detail.complete();
   }
 

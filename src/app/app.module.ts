@@ -24,8 +24,6 @@ import { ToastFavoriteComponent } from './toast-favorite/toast-favorite.componen
     IonicModule.forRoot(), 
     IonicStorageModule.forRoot(), 
     AppRoutingModule,
-    //ToastFavoriteComponent
-
   ],
   exports:[],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, DataService],
