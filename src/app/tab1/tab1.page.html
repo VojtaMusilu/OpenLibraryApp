@@ -7,6 +7,10 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" id="refresher" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <ion-card>
     <ion-card-content>
       <ion-item>

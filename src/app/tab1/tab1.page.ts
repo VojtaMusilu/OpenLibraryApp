@@ -5,7 +5,7 @@ import { Storage } from '@capacitor/storage';
 
 import { DataService } from "../services/data.service";
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastFavoriteComponent } from '../toast-favorite/toast-favorite.component';
 
@@ -42,6 +42,7 @@ export class Tab1Page implements OnInit, OnDestroy {
     public loadingController: LoadingController,
     private serviceData: DataService,
     private route: ActivatedRoute,
+    private router: Router,
     public toastController: ToastController,
     public location: Location,
     public toast: ToastFavoriteComponent
@@ -222,7 +223,26 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
 
+  doRefresh(event) {
+    setTimeout(() => {
+      let navigationExtras: NavigationExtras = {
+        replaceUrl: true,
+        queryParams: {
+          author: null,
+          book: null
+        }
+        
+      };
+      this.router.navigate(['tabs/tab1'],navigationExtras )
+      event.target.complete();
 
+      this.inputBook = "";
+      this.inputAuthor = "";
+      this.booksArray = [];
+      this.bookCount = 0;
+
+    }, 1500);
+  }
 
 
 }

@@ -14,12 +14,9 @@ export class Tab3Page {
   myLibrary: Array<any> = [];
 
   constructor(public alertController: AlertController) {
-  }
-
-  ionViewWillEnter() {
     this.loadLibrary();
-
   }
+
 
   private async loadLibrary() {
     const { value } = await Storage.get({
