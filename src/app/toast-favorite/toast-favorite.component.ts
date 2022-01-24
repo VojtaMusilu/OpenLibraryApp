@@ -18,6 +18,7 @@ export class ToastFavoriteComponent {
   async presentToastFavorite() {
     const toast = await this.toastController.create({
       message: 'Added book to your favorites list!',
+      position: "top",
       duration: 2000,
     });
     toast.present();
@@ -26,6 +27,7 @@ export class ToastFavoriteComponent {
   async presentToastFavoriteFail() {
     const toast = await this.toastController.create({
       message: 'Book is already in your favorites list',
+      position: "top",
       duration: 2000,
     });
     toast.present();

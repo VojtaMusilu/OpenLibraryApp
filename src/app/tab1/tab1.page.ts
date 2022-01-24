@@ -85,6 +85,10 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
 
   public  btnSearchClicked() {
+
+    var searchBtn = document.getElementById("searchButton");
+    searchBtn.setAttribute("disabled", "true");
+
     if (this.inputBook.length >= 3 || this.inputAuthor.length >= 3) {
       this.presentLoading();
       this.books =  this.searchBooksService.getBooks(this.inputBook, this.inputAuthor);
@@ -97,6 +101,7 @@ export class Tab1Page implements OnInit, OnDestroy {
         this.isShow = true;
         this.saveHistory();
         this.loadingDialog.dismiss();
+        searchBtn.setAttribute("disabled", "false");
 
       },
 
@@ -105,9 +110,13 @@ export class Tab1Page implements OnInit, OnDestroy {
           this.presentError().then(() => {
             this.loadingDialog.dismiss()
           });
+          searchBtn.setAttribute("disabled", "false");
+
         }
       )
     }
+
+
   }
 
   async presentLoading() {
@@ -144,7 +153,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       return;
     }
 
-    if (history[0].author !== entry.author || history[0].book !== entry.book) {
+    if (history.length === 0 || history[0].author !== entry.author || history[0].book !== entry.book) {
       history.unshift(entry)
       await Storage.set({
         key: this.KEY_HISTORY,
