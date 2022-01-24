@@ -136,23 +136,15 @@ export class Tab1Page implements OnInit, OnDestroy {
     if (history === null) {
       console.log("history null")
       history = [];
+      history.unshift(entry);
+      await Storage.set({
+        key: this.KEY_HISTORY,
+        value: JSON.stringify(history),
+      });
+      return;
     }
 
-
-    console.log("his0: " + history[0] + "   entry:" + entry)
-    console.log(history[0]);
-    console.log(entry)
-
-    if(history[0].author !== entry.author){
-      console.log("ya author")
-    }
-    if(history[0].book !== entry.book){
-      console.log("ya book")
-    }
-
-
-    if (history.length == 0 || (history[0].author !== entry.author || history[0].book !== entry.book)) {
-      console.log("insideeeeeeeeee")
+    if (history[0].author !== entry.author || history[0].book !== entry.book) {
       history.unshift(entry)
       await Storage.set({
         key: this.KEY_HISTORY,

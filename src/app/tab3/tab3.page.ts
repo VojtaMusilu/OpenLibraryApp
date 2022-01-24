@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Storage } from '@capacitor/storage';
 import { AlertController } from '@ionic/angular';
 import { ItemReorderEventDetail } from '@ionic/core';
@@ -8,15 +8,18 @@ import { ItemReorderEventDetail } from '@ionic/core';
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page {
+export class Tab3Page implements OnInit{
 
   KEY_LIBRARY = "my_library";
   myLibrary: Array<any> = [];
 
   constructor(public alertController: AlertController) { 
+    }
+  
+    ngOnInit() {
     this.loadLibrary();
-  }
 
+  }
 
   private async loadLibrary(){
     const {value} = await Storage.get({
